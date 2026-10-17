@@ -9,13 +9,20 @@ import { Sidebar } from "./components/sidebar";
 import { Topbar } from "./components/topbar";
 import { WarehouseSection } from "./components/warehouse-section";
 import { fetchWarehouseData } from "./lib/api";
-import type { Order, Product, Section, Warehouse } from "./types/warehouse";
+import type {
+  Inventory,
+  Order,
+  Product,
+  Section,
+  Warehouse,
+} from "./types/warehouse";
 
 export default function Home() {
   const [section, setSection] = useState<Section>("Home");
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+  const [inventories, setInventories] = useState<Inventory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
 
@@ -24,6 +31,7 @@ export default function Home() {
     setOrders(data.orders);
     setProducts(data.products);
     setWarehouses(data.warehouses);
+    setInventories(data.inventories);
   }, []);
 
   useEffect(() => {
@@ -34,6 +42,7 @@ export default function Home() {
         setOrders(data.orders);
         setProducts(data.products);
         setWarehouses(data.warehouses);
+        setInventories(data.inventories);
         setLoadError("");
       })
       .catch((error: unknown) => {
@@ -108,6 +117,8 @@ export default function Home() {
           {section === "Warehouse" && (
             <WarehouseSection
               warehouses={warehouses}
+              products={products}
+              inventories={inventories}
               isLoading={isLoading}
               onSaved={loadData}
             />

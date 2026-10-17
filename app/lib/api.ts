@@ -1,4 +1,4 @@
-import type { Order, Product, Warehouse } from "../types/warehouse";
+import type { Inventory, Order, Product, Warehouse } from "../types/warehouse";
 
 type ApiError = { errors?: string[]; error?: string };
 
@@ -31,13 +31,14 @@ export async function apiRequest<T>(
 }
 
 export async function fetchWarehouseData() {
-  const [orders, products, warehouses] = await Promise.all([
+  const [orders, products, warehouses, inventories] = await Promise.all([
     apiRequest<Order[]>("/orders"),
     apiRequest<Product[]>("/products"),
     apiRequest<Warehouse[]>("/warehouses"),
+    apiRequest<Inventory[]>("/inventories"),
   ]);
 
-  return { orders, products, warehouses };
+  return { orders, products, warehouses, inventories };
 }
 
 export function formatDate(value: string) {

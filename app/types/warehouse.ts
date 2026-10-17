@@ -17,6 +17,13 @@ export type Warehouse = {
   has_refrigerated_vehicles: boolean;
 };
 
+export type Inventory = {
+  id: number;
+  warehouse_id: number;
+  product_id: number;
+  quantity_available: number;
+};
+
 export type OrderItem = {
   id: number;
   product_id: number;

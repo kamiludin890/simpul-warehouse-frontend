@@ -323,6 +323,26 @@ button {
   color: var(--green-dark);
 }
 
+.button-delete {
+  background: #fff;
+  border-color: #f2ddd7;
+  color: #a75c50;
+  min-height: 31px;
+  padding: 0 10px;
+}
+
+.button-delete:hover:not(:disabled) {
+  background: #fff5f2;
+  border-color: #edc9c0;
+}
+
+.order-actions {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
 .data-table-wrap {
   background: #fff;
   border: 1px solid var(--line);
@@ -429,6 +449,11 @@ button {
 .status-pending {
   background: #fff4df;
   color: #a77624;
+}
+
+.status-confirmed {
+  background: #e8f5ed;
+  color: #3c8b5d;
 }
 
 .status-processing {
@@ -789,6 +814,75 @@ button {
 
 .facility.available .facility-dot {
   background: #54a37a;
+}
+
+.warehouse-stock {
+  border-top: 1px solid #edf1ee;
+  margin-top: 17px;
+  padding-top: 13px;
+}
+
+.warehouse-stock-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.warehouse-stock-heading h3 {
+  color: #53615b;
+  font-size: 11px;
+  font-weight: 650;
+  margin: 0;
+}
+
+.stock-add-button {
+  font-size: 10px;
+  min-height: 30px;
+  padding: 0 9px;
+}
+
+.warehouse-stock-list {
+  list-style: none;
+  margin: 9px 0 0;
+  padding: 0;
+}
+
+.warehouse-stock-list li {
+  align-items: center;
+  border-top: 1px solid #f1f3f2;
+  color: #56635d;
+  display: flex;
+  font-size: 11px;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.warehouse-stock-list li > span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.warehouse-stock-list strong {
+  color: #34413a;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.warehouse-stock-list small {
+  color: #939d98;
+  font-size: 9px;
+}
+
+.warehouse-stock-list b {
+  color: var(--green-dark);
+  font-size: 12px;
+}
+
+.warehouse-stock-empty {
+  color: #939d98;
+  font-size: 10px;
+  margin: 10px 0 0;
 }
 
 .page-footer {
