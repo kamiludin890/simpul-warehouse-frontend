@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { apiRequest, formatDate } from "../lib/api";
-import type { Order, Product } from "../types/warehouse";
+import type { Order, Product, Warehouse } from "../types/warehouse";
 import { OrderItemFields } from "./order-item-fields";
 import {
   EmptyState,
@@ -13,6 +13,18 @@ import {
 } from "./shared";
 
 const ORDER_STATUSES = ["pending", "processing", "completed", "cancelled"];
+
+function getOrderWarehouses(order: Order) {
+  const warehouses = new Map<number, Warehouse>();
+  for (const item of order.order_items ?? []) {
+    const warehouse = item.warehouse ?? order.warehouse;
+    if (warehouse) warehouses.set(warehouse.id, warehouse);
+  }
+  if (warehouses.size === 0 && order.warehouse) {
+    warehouses.set(order.warehouse.id, order.warehouse);
+  }
+  return [...warehouses.values()];
+}
 
 export function OrderSection({
   orders,
@@ -86,7 +98,7 @@ export function OrderSection({
 
         await apiRequest<{ message: string; order: Order }>("/orders", {
           method: "POST",
-          body: JSON.stringify({ items: orderItems }),
+          body: JSON.stringify({ order: { order_items: orderItems } }),
         });
       }
 
@@ -247,11 +259,24 @@ export function OrderSection({
                 {formatDate(detailsOrder.created_at)}
               </p>
               <p>
+                <strong>Gudang asal:</strong>{" "}
+                {getOrderWarehouses(detailsOrder)
+                  .map(
+                    (warehouse) =>
+                      `${warehouse.name} (${warehouse.code}) · ${warehouse.city}`,
+                  )
+                  .join(", ") || "Belum ditentukan"}
+              </p>
+              <p>
                 <strong>Produk:</strong>{" "}
-                {detailsOrder.order_items
+                {(detailsOrder.order_items ?? [])
                   .map((item) => {
                     const product = productById.get(item.product_id);
-                    return `${product?.name || `Produk #${item.product_id}`} × ${item.quantity}`;
+                    const warehouse = item.warehouse ?? detailsOrder.warehouse;
+                    const source = warehouse
+                      ? ` — ${warehouse.name} (${warehouse.code})`
+                      : "";
+                    return `${product?.name || `Produk #${item.product_id}`} × ${item.quantity}${source}`;
                   })
                   .join(", ") || "Tidak ada item"}
               </p>
@@ -273,6 +298,7 @@ export function OrderSection({
               <tr>
                 <th>Order</th>
                 <th>Tanggal dibuat</th>
+                <th>Gudang asal</th>
                 <th>Produk</th>
                 <th>Status</th>
                 <th className="action-column">Aksi</th>
@@ -289,14 +315,34 @@ export function OrderSection({
                   </td>
                   <td>{formatDate(order.created_at)}</td>
                   <td>
+                    {getOrderWarehouses(order).length ? (
+                      getOrderWarehouses(order).map((warehouse) => (
+                        <span key={warehouse.id}>
+                          <span className="table-primary">
+                            {warehouse.name}
+                          </span>
+                          <span className="table-secondary">
+                            {warehouse.code} · {warehouse.city}
+                          </span>
+                        </span>
+                      ))
+                    ) : (
+                      <span className="table-secondary">Belum ditentukan</span>
+                    )}
+                  </td>
+                  <td>
                     <span className="table-primary">
-                      {order.order_items.length} item
+                      {(order.order_items ?? []).length} item
                     </span>
                     <span className="table-secondary">
-                      {order.order_items
+                      {(order.order_items ?? [])
                         .map((item) => {
                           const product = productById.get(item.product_id);
-                          return `${product?.name || `Produk #${item.product_id}`} × ${item.quantity}`;
+                          const warehouse = item.warehouse ?? order.warehouse;
+                          const source = warehouse
+                            ? ` — ${warehouse.name} (${warehouse.code})`
+                            : "";
+                          return `${product?.name || `Produk #${item.product_id}`} × ${item.quantity}${source}`;
                         })
                         .join(", ") || "Tidak ada item"}
                     </span>

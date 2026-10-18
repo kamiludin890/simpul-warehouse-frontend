@@ -28,6 +28,7 @@ export type OrderItem = {
   id: number;
   product_id: number;
   quantity: number;
+  warehouse?: Warehouse | null;
 };
 
 export type Order = {
@@ -35,5 +36,6 @@ export type Order = {
   order_number: string | null;
   status: string;
   created_at: string;
+  warehouse?: Warehouse | null;
   order_items: OrderItem[];
 };
