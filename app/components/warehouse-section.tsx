@@ -189,7 +189,7 @@ export function WarehouseSection({
                   name="distance_km"
                   placeholder="0"
                   required
-                  type="number"
+                  type="decimal"
                 />
               </label>
               <label className="checkbox-field">
